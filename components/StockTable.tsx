@@ -7,6 +7,7 @@ import AppModal from "./AppModal";
 import { getSupabase } from "../utils/supabase";
 import { STOCKSTABLE } from "../utils/const";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface StockItemProps {
   stockList?: StocksProps[];
@@ -86,7 +87,7 @@ const StockTable: FC<StockItemProps> = ({ stockList }) => {
                   scope="row"
                   className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                 >
-                  {stock?.symbol}
+                  <Link href={`/${stock?.symbol}`}>{stock?.symbol}</Link>
                 </th>
                 <td className="px-6 py-4">{stock?.name || "-"}</td>
                 <td className="px-6 py-4">${stock?.close || 0}</td>
