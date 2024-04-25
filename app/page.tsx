@@ -8,12 +8,18 @@ import { redirect } from "next/navigation";
 
 const fetchUser = async (session: any) => {
   const supabase = getSupabase();
-  const { data, error } = await supabase.from(USERSTABLE).select(`
+  const { data, error } = await supabase
+    .from(USERSTABLE)
+    .select(
+      `
   id,
   name,
   email,
+  auth0_user_id,
   ${PROJECTTABLE} ( id, name )
-`);
+`
+    )
+    .eq("auth0_user_id", session?.user?.sub);
   return data ? data[0] : {};
 };
 

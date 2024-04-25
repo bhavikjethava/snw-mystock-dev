@@ -22,7 +22,7 @@ const fetchStockVolume = async (data: StocksProps[]) => {
     const response = { data: responseJson };
     // const response = { data: STOCKVOLUMN };
     const newData = data.map((item) => {
-      const matchingObject = response.data.data.find(
+      const matchingObject = response?.data?.data?.find(
         (obj: any) => obj.symbol === item.symbol
       );
       return {
