@@ -9,9 +9,30 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
+import { getSupabase } from "@/utils/supabase";
+import { USERSTABLE } from "@/utils/const";
+import { UserProps } from "@/utils/types";
+
+const fetchUser = async (session: any) => {
+  const supabase = getSupabase();
+  const { data, error } = await supabase
+    .from(USERSTABLE)
+    .select(
+      `
+  id,
+  name,
+  email,
+  auth0_user_id
+`
+    )
+    .eq("auth0_user_id", session?.user?.sub);
+  return data ? data[0] : {};
+};
 
 const Header = async () => {
   const session = await getSession();
+  const user: UserProps = await fetchUser(session);
+
   return (
     <header className="flex justify-between items-center py-3 border-b px-20">
       <Link href="#" className="flex items-center">
@@ -34,7 +55,7 @@ const Header = async () => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <div className="flex items-center cursor-pointer gap-2">
-                <span>{session?.user?.nickname}</span>
+                <span>{user?.name}</span>
                 <Button className="rounded-full" size="icon" variant="ghost">
                   <Image
                     style={{
