@@ -147,7 +147,7 @@ const StockDetail = () => {
           </Button>
         ))}
       </div>
-      <div className="flex max-w-[86%] mx-auto pt-6">
+      <div className="flex max-w-[70%] mx-auto pt-6">
         <Line options={options} data={chartData} />
       </div>
     </div>
