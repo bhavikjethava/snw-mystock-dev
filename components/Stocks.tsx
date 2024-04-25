@@ -17,12 +17,13 @@ const fetchStockVolume = async (data: StocksProps[]) => {
   try {
     const symbols = data.map((_stock: StocksProps) => _stock?.symbol!);
     const url = `${MARKETSTOCKVOLUME}&symbols=${symbols.toString()}`;
-    // const response: any = await fetch(`${url}`);
-
-    const response = { data: STOCKVOLUMN };
+    const response1: any = await fetch(`${url}`);
+    const responseJson = await response1.json();
+    const response = { data: responseJson };
+    // const response = { data: STOCKVOLUMN };
     const newData = data.map((item) => {
       const matchingObject = response.data.data.find(
-        (obj) => obj.symbol === item.symbol
+        (obj: any) => obj.symbol === item.symbol
       );
       return {
         ...item,
@@ -48,7 +49,7 @@ const fetchStockList = async () => {
 
 const Stocks: FC<StocksProps_> = async ({ user }) => {
   const stockList: StocksProps[] = await fetchStockList();
-  console.log("===>stockList", stockList);
+  // console.log("===>stockList", stockList);
 
   return (
     <div className="px-14">

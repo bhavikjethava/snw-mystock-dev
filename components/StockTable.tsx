@@ -78,45 +78,55 @@ const StockTable: FC<StockItemProps> = ({ stockList }) => {
         </thead>
         <tbody>
           {stockList &&
-            stockList.map((stock: StocksProps) => (
-              <tr
-                key={stock?.id}
-                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-              >
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+            stockList.map((stock: StocksProps) => {
+              const netChange: any = (
+                (stock?.close || 0) - (stock?.open || 0)
+              ).toFixed(2);
+              return (
+                <tr
+                  key={stock?.id}
+                  className=" bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                 >
-                  <Link href={`/${stock?.symbol}`}>{stock?.symbol}</Link>
-                </th>
-                <td className="px-6 py-4">{stock?.name || "-"}</td>
-                <td className="px-6 py-4">${stock?.close || 0}</td>
-                <td className="px-6 py-4">
-                  {((stock?.close || 0) - (stock?.open || 0)).toFixed(2)}
-                </td>
-                <td className="px-6 py-4">
-                  {(
-                    (((stock?.close || 0) - (stock?.open || 0)) /
-                      (stock?.open || 0) || 0) * 100
-                  ).toFixed(2)}
-                </td>
-                <td className="px-6 py-4">-</td>
-                <td className="px-6 py-4">
-                  <Button
-                    variant="link"
-                    onClick={() => showDeleteConfirmation(stock)}
+                  <th
+                    scope="row"
+                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
-                    <IconDelete height={20} width={20} />
-                  </Button>
-                </td>
-              </tr>
-            ))}
+                    <Link href={`/${stock?.symbol}`}>{stock?.symbol}</Link>
+                  </th>
+                  <td className="px-6 py-4">{stock?.name || "-"}</td>
+                  <td className="px-6 py-4">${stock?.close || 0}</td>
+                  <td
+                    className={`px-6 py-4 ${
+                      netChange >= 0 ? "text-green-600" : "text-red-600"
+                    }`}
+                  >
+                    {netChange}
+                  </td>
+                  <td
+                    className={`px-6 py-4 ${
+                      netChange >= 0 ? "text-green-600" : "text-red-600"
+                    }`}
+                  >
+                    {((netChange / (stock?.open || 0) || 0) * 100).toFixed(2)}
+                  </td>
+                  <td className="px-6 py-4">-</td>
+                  <td className="px-6 py-4">
+                    <Button
+                      variant="link"
+                      onClick={() => showDeleteConfirmation(stock)}
+                    >
+                      <IconDelete height={20} width={20} />
+                    </Button>
+                  </td>
+                </tr>
+              );
+            })}
         </tbody>
       </table>
       {showConfirmationModal && (
         <AppModal>
           <div>
-            <span className="text-sm font-semibold text-gray-900 dark:text-white">
+            <span className="flex text-sm font-semibold text-gray-900 dark:text-white justify-center">
               Are you sure you want to delete this stock?
             </span>
             <div className="mt-4 space-x-4 justify-center flex">

@@ -36,12 +36,10 @@ const AddStockModal: FC<AddStockModalProps> = ({
   const fetchSymbols = async (search: string) => {
     setErrors({ symbol: "" });
     try {
-      //   const response: any = await fetch(
-      //     `${MARKETSTOCKSEARCH}&search=${search}`
-      //   );
+      const response1: any = await fetch(`/api/stocks?search=${search}`);
+      const reposeJson = await response1.json();
 
-      const response = { data: stockList };
-      const data = response.data.data.map((item: any) => ({
+      const data = reposeJson.data.data.map((item: any) => ({
         value: item.symbol,
         label: `${item.name} (${item.symbol})`,
         isDisabled: userStocks.some((d) => d.symbol === item.symbol),
