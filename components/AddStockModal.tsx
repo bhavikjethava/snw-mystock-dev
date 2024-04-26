@@ -16,6 +16,7 @@ interface AddStockModalProps {
   callBack?: () => void;
 }
 
+let debounceTimer: NodeJS.Timeout | undefined;
 const AddStockModal: FC<AddStockModalProps> = ({
   user,
   userStocks,
@@ -57,7 +58,17 @@ const AddStockModal: FC<AddStockModalProps> = ({
       setOptions([]);
       return;
     }
-    if (inputValue.length > 2) fetchSymbols(inputValue);
+    const debounceDelay = 500;
+
+    if (typeof debounceTimer !== "undefined") {
+      clearTimeout(debounceTimer);
+    }
+
+    debounceTimer = setTimeout(() => {
+      if (inputValue.length > 2) {
+        fetchSymbols(inputValue);
+      }
+    }, debounceDelay);
   };
 
   const addStock = async () => {

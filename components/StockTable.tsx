@@ -71,7 +71,7 @@ const StockTable: FC<StockItemProps> = ({ stockList }) => {
               % Change
             </th>
             <th scope="col" className="px-6 py-3">
-              Market Cap
+            Volume
             </th>
             <th scope="col" className="px-6 py-3"></th>
           </tr>
@@ -109,7 +109,7 @@ const StockTable: FC<StockItemProps> = ({ stockList }) => {
                   >
                     {((netChange / (stock?.open || 0) || 0) * 100).toFixed(2)}
                   </td>
-                  <td className="px-6 py-4">-</td>
+                  <td className="px-6 py-4">{stock?.volume}</td>
                   <td className="px-6 py-4">
                     <Button
                       variant="link"

@@ -16,21 +16,24 @@ interface StocksProps_ {
 const fetchStockVolume = async (data: StocksProps[]) => {
   try {
     const symbols = data.map((_stock: StocksProps) => _stock?.symbol!);
-    const url = `${MARKETSTOCKVOLUME}&symbols=${symbols.toString()}`;
-    const response1: any = await fetch(`${url}`);
-    const responseJson = await response1.json();
-    const response = { data: responseJson };
-    // const response = { data: STOCKVOLUMN };
-    const newData = data.map((item) => {
-      const matchingObject = response?.data?.data?.find(
-        (obj: any) => obj.symbol === item.symbol
-      );
-      return {
-        ...item,
-        ...matchingObject,
-      };
-    });
-    return newData;
+    if (symbols.length > 0) {
+      const url = `${MARKETSTOCKVOLUME}&symbols=${symbols.toString()}`;
+      const response1: any = await fetch(`${url}`);
+      const responseJson = await response1.json();
+      const response = { data: responseJson };
+      // const response = { data: STOCKVOLUMN };
+      const newData = data.map((item) => {
+        const matchingObject = response?.data?.data?.find(
+          (obj: any) => obj.symbol === item.symbol
+        );
+        return {
+          ...item,
+          ...matchingObject,
+        };
+      });
+      return newData;
+    }
+    return [];
   } catch (error) {
     console.error("Error fetching stock symbols:", error);
     return [];

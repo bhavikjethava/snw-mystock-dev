@@ -8,6 +8,7 @@ export interface UserProps {
   name?: string;
   email?: string;
   projects?: ProjectProps[];
+  is_admin?: boolean;
 }
 
 export interface FormData {
@@ -21,4 +22,5 @@ export interface StocksProps {
   name?: string;
   open?: number;
   close?: number;
+  volume?: number;
 }
