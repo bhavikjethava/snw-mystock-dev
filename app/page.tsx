@@ -20,7 +20,7 @@ const Home = async () => {
   return (
     <main className="flex min-h-screen flex-col bg-white p-5">
       <div className="z-10 w-full items-center justify-between text-sm ">
-        <Stocks user={user} />;
+        <Stocks user={user} />
       </div>
     </main>
   );
