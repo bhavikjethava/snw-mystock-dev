@@ -2,11 +2,7 @@ import React, { FC } from "react";
 import AddStockModal from "./AddStockModal";
 import { getSupabase } from "@/utils/supabase";
 import { MARKETSTOCKVOLUME, STOCKSTABLE, USERSTABLE } from "@/utils/const";
-import { StocksProps } from "@/utils/types";
-import { STOCKVOLUMN } from "@/utils/stockList";
-import { IconDelete } from "./Icons";
-import { Button } from "./ui/button";
-import StockItem from "./StockTable";
+import { StocksProps, UserProps } from "@/utils/types";
 import StockTable from "./StockTable";
 
 interface StocksProps_ {
@@ -40,18 +36,18 @@ const fetchStockVolume = async (data: StocksProps[]) => {
   }
 };
 
-const fetchStockList = async () => {
+const fetchStockList = async (user: UserProps) => {
   const supabase = getSupabase();
   const { data, error } = await supabase
     .from(STOCKSTABLE)
     .select()
-    .eq("user_id", 1);
+    .eq("user_id", user?.id);
   return fetchStockVolume(data as StocksProps[]) || [];
   // return data || [];
 };
 
 const Stocks: FC<StocksProps_> = async ({ user }) => {
-  const stockList: StocksProps[] = await fetchStockList();
+  const stockList: StocksProps[] = await fetchStockList(user);
   // console.log("===>stockList", stockList);
 
   return (

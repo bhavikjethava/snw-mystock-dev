@@ -71,7 +71,7 @@ const StockTable: FC<StockItemProps> = ({ stockList }) => {
               % Change
             </th>
             <th scope="col" className="px-6 py-3">
-            Volume
+              Volume
             </th>
             <th scope="col" className="px-6 py-3"></th>
           </tr>
@@ -91,7 +91,9 @@ const StockTable: FC<StockItemProps> = ({ stockList }) => {
                     scope="row"
                     className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
-                    <Link href={`/${stock?.symbol}`}>{stock?.symbol}</Link>
+                    <Link href={`/${stock?.symbol}`}>
+                      {stock?.symbol}
+                    </Link>
                   </th>
                   <td className="px-6 py-4">{stock?.name || "-"}</td>
                   <td className="px-6 py-4">${stock?.close || 0}</td>
@@ -121,6 +123,11 @@ const StockTable: FC<StockItemProps> = ({ stockList }) => {
                 </tr>
               );
             })}
+          {stockList && stockList.length == 0 &&
+            <tr>
+              <td className="col-span-6 text-green-600 px-6 py-4">No stock found</td>
+            </tr>
+          }
         </tbody>
       </table>
       {showConfirmationModal && (

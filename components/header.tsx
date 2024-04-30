@@ -10,12 +10,26 @@ import {
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
 import { getSupabase } from "@/utils/supabase";
-import { USERSTABLE, fetchCurrentUser } from "@/utils/const";
+import { PROJECTTABLE, USERSTABLE } from "@/utils/const";
 import { UserProps } from "@/utils/types";
+
+export const fetchUser = async (session: any) => {
+  const supabase = getSupabase();
+  const { data, error } = await supabase
+    .from(USERSTABLE)
+    .select()
+    .eq("auth0_user_id", session?.user?.sub);
+  if (data) {
+    const user: UserProps = data[0];
+    return user;
+  } else {
+    return null;
+  }
+};
 
 const Header = async () => {
   const session = await getSession();
-  const user: UserProps = await fetchCurrentUser(session);
+  const user: UserProps = await fetchUser(session);
 
   return (
     <header className="flex justify-between items-center py-3 border-b px-20">

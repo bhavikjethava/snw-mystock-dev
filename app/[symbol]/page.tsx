@@ -16,8 +16,15 @@ import { Line } from "react-chartjs-2";
 import React, { useEffect, useState } from "react";
 import { stockDetail } from "../../utils/stockList";
 import { useParams } from "next/navigation";
-import { MARKETSTOCKDETAIL, STOCKFILTER } from "@/utils/const";
+import {
+  MARKETSTOCKDETAIL,
+  STOCKFILTER,
+  fetchCurrentUser,
+} from "@/utils/const";
 import { Button } from "@/components/ui/button";
+import withAuth from "@/components/WithAuth";
+import { getSession, withPageAuthRequired } from "@auth0/nextjs-auth0";
+import { UserProps } from "@/utils/types";
 
 ChartJS.register(
   CategoryScale,
@@ -62,14 +69,18 @@ const StockDetail = () => {
 
   const renderChart = (_stockDetail: any) => {
     const stockDetailData = _stockDetail?.data?.reverse();
-    const labels = stockDetailData?.map((x: any) => is1D ? x.date.split("T")[1].substring(0, 8) : x.date.split("T")[0]);
+    const labels = stockDetailData?.map((x: any) =>
+      is1D ? x.date.split("T")[1].substring(0, 8) : x.date.split("T")[0]
+    );
     const data = {
       labels,
       datasets: [
         {
           label: "",
           fill: true,
-          data: is1D ? stockDetailData?.map((x: any) => x.last) : stockDetailData?.map((x: any) => x.close),
+          data: is1D
+            ? stockDetailData?.map((x: any) => x.last)
+            : stockDetailData?.map((x: any) => x.close),
           borderColor: "rgb(255, 255, 255)",
           backgroundColor: "rgba(255, 99, 132, 0.5)",
         },
@@ -84,7 +95,7 @@ const StockDetail = () => {
 
   const fetchStockDetail = async () => {
     const isMax = selectedFiletr == STOCKFILTER[STOCKFILTER.length - 1];
-    
+
     const fromDate = isMax ? "" : dateRanges?.["_" + selectedFiletr];
     const toDate = isMax ? "" : dateRanges.today;
     // const url = `${MARKETSTOCKDETAIL}&symbols=${symbol}&date_from=${fromDate}&date_to=${toDate}`;
@@ -153,5 +164,14 @@ const StockDetail = () => {
     </div>
   );
 };
+
+StockDetail.getInitialProps = withAuth(async (ctx: any) => {
+  const session = await getSession(ctx.req, ctx.res);
+  if (session?.isLoading) return { user: null };
+  if (session?.error) return { user: null };
+
+  const user: UserProps = await fetchCurrentUser(session);
+  return { user };
+});
 
 export default StockDetail;

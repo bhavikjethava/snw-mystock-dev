@@ -10,6 +10,7 @@ import { getSupabase } from "@/utils/supabase";
 import { ProjectProps, UserProps } from "@/utils/types";
 import { getSession, withPageAuthRequired } from "@auth0/nextjs-auth0";
 import { redirect } from "next/navigation";
+import withAuth from "@/components/WithAuth";
 
 const Home = async () => {
   const session = await getSession();
@@ -25,5 +26,14 @@ const Home = async () => {
     </main>
   );
 };
+
+Home.getInitialProps = withAuth(async (ctx: any) => {
+  const session = await getSession(ctx.req, ctx.res);
+  if (session?.isLoading) return { user: null };
+  if (session?.error) return { user: null };
+
+  const user: UserProps = await fetchCurrentUser(session);
+  return { user };
+});
 
 export default withPageAuthRequired(Home);
