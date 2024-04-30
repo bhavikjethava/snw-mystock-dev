@@ -23,7 +23,7 @@ export const fetchUser = async (session: any) => {
     const user: UserProps = data[0];
     return user;
   } else {
-    return null;
+    return {};
   }
 };
 
